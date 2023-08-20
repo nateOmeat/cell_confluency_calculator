@@ -27,7 +27,7 @@ dead_image = st.file_uploader(f" **Upload Your 3d Dead Image Below:**")
 
 
 
-if live_image and dead_image:
+if live_image and dead_image is not None:
 
     # Display uploaded images side by side
     col1, col2 = st.columns(2)
