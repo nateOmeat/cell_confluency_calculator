@@ -27,7 +27,7 @@ dead_image = st.file_uploader(f" **Upload Your 3d Dead Image Below:**")
 
 
 
-if live_image and dead_image is not None:
+if live_image and dead_image:
 
     # Display uploaded images side by side
     col1, col2 = st.columns(2)
@@ -109,4 +109,5 @@ def percent_confluence(image_594, image_fitc, alpha=1, beta=.12, pictures=True):
         st.pyplot(fig)
         st.write(f'Percent Confluence: {percent_confluence}%')
 
-percent_confluence(dead_image,live_image)
+if live_image and dead_image:
+    percent_confluence(dead_image, live_image)
