@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage import io, filters, measure, morphology
@@ -19,22 +20,26 @@ st.image("https://uploads-ssl.webflow.com/643e8b8f7e656b61bd29c098/644240807d96b
 st.title('Omeat Cell Confluency Calculator')
 
 
-#loading live FITC - 488nm Image
-live_image = st.file_uploader(f" **Upload Your 3d Live Image Below:**")
+st.warning("Note: Make sure the live/dead pairs have the same name other than differing by _live/ _dead")
+st.info('Example: **test_file_0000_live.jpg** / **test_file_0000_dead.jpg**')
 
-#loading dead 594nm image
-dead_image = st.file_uploader(f" **Upload Your 3d Dead Image Below:**")
-
+col1, col2, = st.columns(2)
 
 
-if live_image and dead_image:
+with col1: 
+    st.header('Live Images (FITC)')
 
-    # Display uploaded images side by side
-    col1, col2 = st.columns(2)
-    col1.image(live_image, caption='Uploaded Live Image.', use_column_width=True)
-    col2.image(dead_image, caption='Uploaded Dead Image.', use_column_width=True)
+    #loading live FITC - 488nm Image
+    live_images = st.file_uploader(f" **Upload Your 3d Live(s) Image Below:**", 
+    accept_multiple_files = True)
 
 
+with col2: 
+    st.header('Dead Images (594 nm)')
+
+    #loading dead 594nm image
+    dead_images = st.file_uploader(f" **Upload Your 3d Dead Image(s) Below:**",
+    accept_multiple_files = True)
 
 
 def percent_confluence(image_594, image_fitc, alpha=1, beta=.12, pictures=True):
@@ -108,6 +113,58 @@ def percent_confluence(image_594, image_fitc, alpha=1, beta=.12, pictures=True):
 
         st.pyplot(fig)
         st.write(f'Percent Confluence: {percent_confluence}%')
+        return percent_confluence
 
-if live_image and dead_image:
-    percent_confluence(dead_image, live_image)
+uploaded_files = live_images + dead_images
+
+data = {
+    "Live File": [],
+    "Dead File": [],
+    "Percent Confluence": []
+}
+
+if uploaded_files:
+    files = [file.name for file in uploaded_files]
+    processed_files = []
+
+    for file in files:
+        if '_live' in file:
+            dead_file = file.replace('_live', '_dead')
+
+            if dead_file in files and dead_file not in processed_files:
+                live_path = next(item for item in live_images if item.name == file)
+                dead_path = next(item for item in dead_images if item.name == dead_file)
+
+                result = percent_confluence(dead_path, live_path)
+
+                # Store in data dictionary
+                data["Live File"].append(file)
+                data["Dead File"].append(dead_file)
+                data["Percent Confluence"].append(result)
+
+                # Add to the processed list to avoid double-processing
+                processed_files.append(file)
+                processed_files.append(dead_file)
+
+    # Generate dataframe from percent confluence results
+    df = pd.DataFrame(data)
+    mean = np.mean(df['Percent Confluence'])
+    std = np.std(df["Percent Confluence"])
+    st.dataframe(df)
+
+    csv = df.to_csv(index=False)
+    st.download_button(
+        label="Download data as CSV",
+        data=csv,
+        file_name="confluence_data.csv",
+        mime="text/csv"
+        )
+
+
+
+    # Plot 
+    fig = px.bar(df, x="Live File", y="Percent Confluence", title="Percent Confluence Summary", template = 'ggplot2', width = 1000)
+    fig.update_layout(title_x = 0.5)
+    st.plotly_chart(fig)
+    st.write('Mean Percent Confluence:',np.round(mean,2), 'Standard Deviation:',np.round(std,2))
+
