@@ -20,8 +20,8 @@ st.image("https://uploads-ssl.webflow.com/643e8b8f7e656b61bd29c098/644240807d96b
 st.title('Omeat Cell Confluency Calculator')
 
 
-st.warning("Note: Make sure the live/dead pairs have the same name other than differing by _live/ _dead")
-st.info('Example: **test_file_0000_live.jpg** / **test_file_0000_dead.jpg**')
+st.warning("Note: Make sure the live/dead pairs have the same name other than differing by _fitc/ _af594")
+st.info('Example: **test_file_0000_fitc.jpg** / **test_file_0000_af594.jpg**')
 
 col1, col2, = st.columns(2)
 
@@ -128,8 +128,8 @@ if uploaded_files:
     processed_files = []
 
     for file in files:
-        if '_live' in file:
-            dead_file = file.replace('_live', '_dead')
+        if '_fitc' in file:
+            dead_file = file.replace('_fitc', '_af594')
 
             if dead_file in files and dead_file not in processed_files:
                 live_path = next(item for item in live_images if item.name == file)
