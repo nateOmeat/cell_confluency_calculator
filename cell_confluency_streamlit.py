@@ -45,10 +45,10 @@ with col2:
 def percent_confluence(image_594, image_fitc, alpha=1, beta=.12, pictures=True):
         # Reading the images directly from the UploadedFile object
 
-    dead_load = io.imread(BytesIO(image_594.read()), as_gray=True)
+    dead_load = io.imread(BytesIO(image_594.read()), as_gray=True)[:1750,:]
     #dead_load = np.clip(dead_load* alpha + beta, 0, 1)
     image_594.seek(0)  # Reset file pointer to the beginning
-    live_load = io.imread(BytesIO(image_fitc.read()), as_gray=True)
+    live_load = io.imread(BytesIO(image_fitc.read()), as_gray=True)[:1750,:]
     image_fitc.seek(0)  # Reset file pointer to the beginning
 
 
