@@ -45,10 +45,10 @@ with col2:
 def percent_confluence(image_594, image_fitc, alpha=1, beta=.12, pictures=True):
         # Reading the images directly from the UploadedFile object
 
-    dead_load = io.imread(BytesIO(image_594.read()), as_gray=True)[:1750,:]
+    dead_load = io.imread(BytesIO(image_594.read()), as_gray=True)
     #dead_load = np.clip(dead_load* alpha + beta, 0, 1)
     image_594.seek(0)  # Reset file pointer to the beginning
-    live_load = io.imread(BytesIO(image_fitc.read()), as_gray=True)[:1750,:]
+    live_load = io.imread(BytesIO(image_fitc.read()), as_gray=True)
     image_fitc.seek(0)  # Reset file pointer to the beginning
 
 
@@ -79,10 +79,10 @@ def percent_confluence(image_594, image_fitc, alpha=1, beta=.12, pictures=True):
     #get area of mc_binary
     mc_load = np.clip(dead_load * alpha + beta, 0, 1)
 
-    mc_area = np.sum(mc_load)
+    mc_area = np.sum(mc_load) - 8478
 
     #get area of mc_cell_signal
-    cell_area = np.sum(cell_signal_binary)
+    cell_area = np.sum(cell_signal_binary) - 8478
 
 
 
