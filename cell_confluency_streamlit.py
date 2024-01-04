@@ -13,11 +13,9 @@ from skimage.filters import threshold_local
 
 st.set_page_config(layout="wide")
 
-#logo
-st.image("https://uploads-ssl.webflow.com/643e8b8f7e656b61bd29c098/644240807d96bd6b2322d3a0_OmeatFooterLogo.png",
-         width = 500)
 
-st.title('Omeat Cell Confluency Calculator')
+
+st.title('Cell Confluency Calculator')
 
 
 st.warning("Note: Make sure the live/dead pairs have the same name other than differing by _fitc/ _af594")
