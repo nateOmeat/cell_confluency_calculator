@@ -14,7 +14,7 @@ from skimage.filters import threshold_local
 st.set_page_config(layout="wide")
 
 
-st.image('confluency_pic.png')
+st.image('confluency_pic.png', width = 300)
 
 st.title('Cell Confluency Calculator')
 
